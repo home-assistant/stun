@@ -4,6 +4,12 @@ on:
   release:
     types:
       - published
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -30,4 +36,4 @@ jobs:
           context: .
           platforms: linux/amd64
           push: ${{ github.event_name == 'release' }}
-          tags: ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
+          tags: ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name || github.sha }}
