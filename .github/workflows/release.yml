@@ -32,5 +32,5 @@ jobs:
         with:
           context: .
           platforms: linux/amd64
-          push: true
+          push: ${{ github.event_name == 'release' }}
           tags: ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
