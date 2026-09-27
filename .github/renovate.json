@@ -1,0 +1,38 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "enabledManagers": ["dockerfile", "github-actions"],
+  "minimumReleaseAge": "3 days",
+  "schedule": ["before 8am on monday"],
+  "semanticCommits": "disabled",
+  "labels": [],
+  "packageRules": [
+    {
+      "description": "coturn tags carry an Alpine package revision (like 4.6.2-r12), which the default Docker versioning treats as an incompatible suffix. Docker Hub also returns no release timestamps for many of them, so the minimum release age would keep updates pending forever.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["coturn/coturn"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-r(?<build>\\d+)$",
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "The docker/* actions move together in the release workflow",
+      "matchPackageNames": ["docker/**"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Docker actions",
+      "groupSlug": "docker-actions"
+    },
+    {
+      "description": "Leave runner labels and action version inputs alone",
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["github-runner", "uses-with"],
+      "enabled": false
+    },
+    {
+      "description": "Our own actions that follow a branch (like home-assistant/actions@master) float on purpose. Pinning them would open a digest PR in every repository for each change to them. Our own actions on a version tag are pinned like any other.",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["home-assistant/**"],
+      "matchCurrentValue": "/^(dev|main|master)$/",
+      "pinDigests": false
+    }
+  ]
+}
