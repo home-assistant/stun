@@ -1,4 +1,4 @@
-FROM coturn/coturn:4.18.0-r0
+FROM coturn/coturn:4.19.2-r0
 COPY ./turnserver.conf /etc/coturn/turnserver.conf
 
 ENV DETECT_EXTERNAL_IP=yes
